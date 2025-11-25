@@ -28,6 +28,8 @@
 
 *Smooth animations, expandable search, and glassmorphism effects*
 
+</div>
+
 ## ✨ Features
 
 - 🎯 **100% Framework Agnostic** - Works with any navigation solution (Navigation3, Decompose, Voyager, PreCompose, Appyx) or plain Compose state
