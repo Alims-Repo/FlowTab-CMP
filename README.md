@@ -21,8 +21,8 @@
 
 ### In Action
 
-| Demo 1 | Demo 2 |
-|--------|--------|
+| Light Theme                                         | Dark Theme                                    |
+|-----------------------------------------------------|-----------------------------------------------|
 | <img src="media/flowtab-demo-light.gif" width="250"/> | <img src="media/flowtab-demo.gif" width="250"/> |
 
 
