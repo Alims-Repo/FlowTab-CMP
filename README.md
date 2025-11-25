@@ -4,7 +4,7 @@
 
 **A beautiful, animated, and completely framework-agnostic bottom navigation bar for Jetpack Compose and Compose Multiplatform**
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/flow-tab?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/io.github.alims-repo/flow-tab)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/flowtab-cmp?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/io.github.alims-repo/flowtab-cmp)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-purple.svg?logo=kotlin)](http://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.9.3-brightgreen)](https://www.jetbrains.com/lp/compose-multiplatform/)
@@ -37,17 +37,17 @@ Add to your `libs.versions.toml`:
 
 ```toml
 [versions]
-flow-tab = "1.0.0"
+flowtab-cmp = "0.5.1-beta"
 
 [libraries]
-flow-tab = { module = "io.github.alims-repo:flow-tab", version.ref = "flow-tab" }
+flowtab-cmp = { module = "io.github.alims-repo:flowtab-cmp", version.ref = "flowtab-cmp" }
 ```
 
 Then in your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation(libs.flow.tab)
+    implementation(libs.flowtab.cmp)
 }
 ```
 
@@ -55,7 +55,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'io.github.alims-repo:flow-tab:1.0.0'
+    implementation 'io.github.alims-repo:flowtab-cmp:0.5.1-beta'
 }
 ```
 
@@ -565,14 +565,16 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-Please read our [Contributing Guide](CONTRIBUTING.md) for more details.
+Please read our [Contributing Guide](https://github.com/Alims-Repo/FlowTab-CMP/blob/main/CONTRIBUTING.md) for more details.
 
 ---
 
 ## 📄 License
 
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/Alims-Repo/FlowTab-CMP/blob/main/LICENSE) file for details.
+
 ```
-Copyright 2024 Alim
+Copyright 2025 Alim
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -600,10 +602,10 @@ limitations under the License.
 
 ## 📞 Support & Community
 
-- 🐛 [Report a Bug](https://github.com/Alims-Repo/flow-tab/issues/new?template=bug_report.md)
-- 💡 [Request a Feature](https://github.com/Alims-Repo/flow-tab/issues/new?template=feature_request.md)
-- 💬 [Join Discussions](https://github.com/Alims-Repo/flow-tab/discussions)
-- 📧 Contact: your.email@example.com
+- 🐛 [Report a Bug](https://github.com/Alims-Repo/FlowTab-CMP/issues/new?template=bug_report.md)
+- 💡 [Request a Feature](https://github.com/Alims-Repo/FlowTab-CMP/issues/new?template=feature_request.md)
+- 💬 [Join Discussions](https://github.com/Alims-Repo/FlowTab-CMP/discussions)
+- 📧 Contact: sourav.0.alim@gmail.com
 
 ---
 
