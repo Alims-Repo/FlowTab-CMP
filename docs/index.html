@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowTab - Bottom Navigation for Compose Multiplatform</title>
+    <meta name="description" content="A framework-agnostic bottom navigation bar for Jetpack Compose and Compose Multiplatform">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1976D2;
+            --primary-dark: #0D47A1;
+            --text-dark: #212121;
+            --text-secondary: #757575;
+            --border: #E0E0E0;
+            --bg-light: #FAFAFA;
+            --bg-white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .hero {
+            background: var(--bg-white);
+            padding: 5rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .badges {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .badge-img {
+            height: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+        }
+
+        .demo-section {
+            background: var(--bg-light);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .demo-images {
+            max-width: 1000px;
+            margin: 2rem auto 0;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-img {
+            width: 280px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            padding: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .code-section {
+            background: var(--bg-light);
+            padding: 4rem 2rem;
+        }
+
+        .code-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .code-tab {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .code-tab.active {
+            background: var(--bg-white);
+            color: var(--primary);
+            border-color: var(--border);
+        }
+
+        .code-block {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 0 6px 6px 6px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .comment { color: #6A737D; }
+        .keyword { color: #D73A49; }
+        .string { color: #032F62; }
+        .function { color: #6F42C1; }
+
+        .indicators-section {
+            background: var(--bg-white);
+        }
+
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .indicator-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .indicator-visual {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .indicator-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .indicator-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .integration-section {
+            background: var(--bg-light);
+        }
+
+        .integration-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .integration-item {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .config-table th,
+        .config-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .config-table th {
+            background: var(--bg-light);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .config-table td {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .demo-img {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <nav class="nav-container">
+        <div class="logo-title">FlowTab</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="#indicators">Indicators</a></li>
+            <li><a href="#configuration">Configuration</a></li>
+            <li><a href="https://github.com/Alims-Repo/FlowTab-CMP">GitHub</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>FlowTab</h1>
+        <p class="hero-subtitle">
+            A framework-agnostic bottom navigation bar for Jetpack Compose and Compose Multiplatform with smooth animations and customizable styling.
+        </p>
+
+        <div class="badges">
+            <img src="https://img.shields.io/maven-central/v/io.github.alims-repo/flowtab-cmp?color=1976D2&label=Maven%20Central" alt="Maven Central" class="badge-img">
+            <img src="https://img.shields.io/badge/License-Apache%202.0-1976D2.svg" alt="License" class="badge-img">
+            <img src="https://img.shields.io/badge/Kotlin-2.2.21-7F52FF.svg?logo=kotlin" alt="Kotlin" class="badge-img">
+            <img src="https://img.shields.io/badge/Compose%20Multiplatform-1.9.3-4285F4" alt="Compose" class="badge-img">
+        </div>
+
+        <div class="btn-group">
+            <a href="https://github.com/Alims-Repo/FlowTab-CMP" class="btn btn-primary">View on GitHub</a>
+            <a href="#installation" class="btn btn-secondary">Get Started</a>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Section -->
+<section class="demo-section">
+    <div class="demo-images">
+        <img src="media/flowtab-demo-light.gif" alt="FlowTab Light Theme" class="demo-img" onerror="this.style.display='none'">
+        <img src="media/flowtab-demo.gif" alt="FlowTab Dark Theme" class="demo-img" onerror="this.style.display='none'">
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section" id="features">
+    <h2 class="section-title">Key Features</h2>
+    <div class="features">
+        <div class="feature">
+            <h3 class="feature-title">Framework Agnostic</h3>
+            <p class="feature-desc">Works with any navigation solution including Navigation Compose, Decompose, Voyager, PreCompose, Appyx, or plain state management.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Smooth Animations</h3>
+            <p class="feature-desc">Built-in smooth transitions, scale effects, and fluid search bar expansion with customizable timing.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Expandable Search</h3>
+            <p class="feature-desc">Built-in expandable search bar with real-time query callbacks and search submission handling.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Glassmorphism Effects</h3>
+            <p class="feature-desc">Optional blur effects powered by Haze library for modern, premium visual appearance.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Badge Support</h3>
+            <p class="feature-desc">Display notification counts or dot indicators with customizable colors and styling.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Custom Indicators</h3>
+            <p class="feature-desc">Choose from Ripple, Dot, or Line selection indicators to match your design system.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Lightweight</h3>
+            <p class="feature-desc">Zero navigation dependencies, minimal overhead, optimized for performance and memory efficiency.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Multiplatform</h3>
+            <p class="feature-desc">Full support for Android and iOS (iosArm64, iosX64, iosSimulatorArm64) with shared codebase.</p>
+        </div>
+
+        <div class="feature">
+            <h3 class="feature-title">Highly Customizable</h3>
+            <p class="feature-desc">Extensive styling options including colors, heights, corner radius, elevations, and animations.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Installation Section -->
+<section class="code-section" id="installation">
+    <div class="code-container">
+        <h2 class="section-title">Installation</h2>
+
+        <div class="code-tabs">
+            <button class="code-tab active" onclick="showTab('gradle-kts')">Gradle (Kotlin DSL)</button>
+            <button class="code-tab" onclick="showTab('gradle-groovy')">Gradle (Groovy)</button>
+        </div>
+
+        <div id="gradle-kts" class="code-block">
+                <pre><span class="comment">// Add to libs.versions.toml</span>
+[versions]
+flowtab-cmp = <span class="string">"0.5.1-beta"</span>
+
+[libraries]
+flowtab-cmp = { module = <span class="string">"io.github.alims-repo:flowtab-cmp"</span>, version.ref = <span class="string">"flowtab-cmp"</span> }
+
+<span class="comment">// In your module's build.gradle.kts</span>
+<span class="keyword">dependencies</span> {
+    <span class="function">implementation</span>(libs.flowtab.cmp)
+}</pre>
+        </div>
+
+        <div id="gradle-groovy" class="code-block" style="display:none;">
+                <pre><span class="keyword">dependencies</span> {
+    <span class="function">implementation</span> <span class="string">'io.github.alims-repo:flowtab-cmp:0.5.1-beta'</span>
+}</pre>
+        </div>
+
+        <h3 style="margin-top: 3rem; margin-bottom: 1rem; font-size: 1.5rem;">Quick Start</h3>
+
+        <div class="code-block">
+                <pre><span class="keyword">@Composable</span>
+<span class="keyword">fun</span> <span class="function">MyApp</span>() {
+    <span class="keyword">var</span> selectedScreen <span class="keyword">by</span> <span class="function">remember</span> { <span class="function">mutableStateOf</span>(<span class="string">"home"</span>) }
+
+    <span class="keyword">val</span> navItems = <span class="function">remember</span> {
+        <span class="function">listOf</span>(
+            <span class="function">NavItem</span>(
+                id = <span class="string">"home"</span>,
+                label = <span class="string">"Home"</span>,
+                icon = Icons.Outlined.Home,
+                selectedIcon = Icons.Filled.Home
+            ),
+            <span class="function">NavItem</span>(
+                id = <span class="string">"search"</span>,
+                label = <span class="string">"Search"</span>,
+                icon = Icons.Default.Search,
+                type = NavItemType.Search
+            ),
+            <span class="function">NavItem</span>(
+                id = <span class="string">"profile"</span>,
+                label = <span class="string">"Profile"</span>,
+                icon = Icons.Outlined.Person,
+                selectedIcon = Icons.Filled.Person,
+                badge = <span class="function">BadgeData</span>(count = 3)
+            )
+        )
+    }
+
+    <span class="function">Scaffold</span>(
+        bottomBar = {
+            <span class="function">BottomNavigation</span>(
+                items = navItems,
+                selectedId = selectedScreen,
+                onItemSelected = { item -> selectedScreen = item.id }
+            )
+        }
+    ) { padding ->
+        <span class="comment">// Your screen content</span>
+    }
+}</pre>
+        </div>
+    </div>
+</section>
+
+<!-- Selection Indicators Section -->
+<section class="section indicators-section" id="indicators">
+    <h2 class="section-title">Selection Indicators</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Choose from three indicator styles to match your design system:</p>
+
+    <div class="indicator-grid">
+        <div class="indicator-card">
+            <div class="indicator-visual">━━</div>
+            <h3 class="indicator-name">Ripple</h3>
+            <p class="indicator-desc">Full-width background highlight. Bold and high-contrast design.</p>
+        </div>
+
+        <div class="indicator-card">
+            <div class="indicator-visual">●</div>
+            <h3 class="indicator-name">Dot</h3>
+            <p class="indicator-desc">Small circular indicator. Minimal and modern style.</p>
+        </div>
+
+        <div class="indicator-card">
+            <div class="indicator-visual">▬</div>
+            <h3 class="indicator-name">Line</h3>
+            <p class="indicator-desc">Horizontal line indicator. Material Design 3 style.</p>
+        </div>
+    </div>
+
+    <div class="code-block" style="margin-top: 2rem;">
+            <pre><span class="comment">// Ripple Indicator</span>
+<span class="function">BottomNavigation</span>(
+    config = <span class="function">NavConfig</span>(
+        navIndicator = <span class="function">NavIndicator.Ripple</span>(
+            color = MaterialTheme.colorScheme.primaryContainer
+        )
+    )
+)
+
+<span class="comment">// Dot Indicator</span>
+<span class="function">BottomNavigation</span>(
+    config = <span class="function">NavConfig</span>(
+        navIndicator = <span class="function">NavIndicator.Dot</span>(
+            size = 8.dp,
+            color = MaterialTheme.colorScheme.primary
+        )
+    )
+)
+
+<span class="comment">// Line Indicator</span>
+<span class="function">BottomNavigation</span>(
+    config = <span class="function">NavConfig</span>(
+        navIndicator = <span class="function">NavIndicator.Line</span>(
+            height = 3.dp,
+            width = 40.dp,
+            color = MaterialTheme.colorScheme.primary
+        )
+    )
+)</pre>
+    </div>
+</section>
+
+<!-- Integration Section -->
+<section class="section integration-section">
+    <h2 class="section-title">Framework Compatibility</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        FlowTab works seamlessly with any navigation framework or state management solution:
+    </p>
+
+    <div class="integration-list">
+        <div class="integration-item">Navigation Compose</div>
+        <div class="integration-item">Decompose</div>
+        <div class="integration-item">Voyager</div>
+        <div class="integration-item">PreCompose</div>
+        <div class="integration-item">Appyx</div>
+        <div class="integration-item">Plain State Management</div>
+    </div>
+
+    <p style="color: var(--text-secondary); margin-top: 2rem;">
+        See the <a href="https://github.com/Alims-Repo/FlowTab-CMP#-integration-examples" style="color: var(--primary); text-decoration: none;">GitHub README</a> for detailed integration examples.
+    </p>
+</section>
+
+<!-- Configuration Section -->
+<section class="section" id="configuration">
+    <h2 class="section-title">Configuration Options</h2>
+
+    <table class="config-table">
+        <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><code>height</code></td>
+            <td>Dp</td>
+            <td>60.dp</td>
+            <td>Height of the navigation bar</td>
+        </tr>
+        <tr>
+            <td><code>cornerRadius</code></td>
+            <td>Dp</td>
+            <td>60.dp</td>
+            <td>Corner radius for rounded edges</td>
+        </tr>
+        <tr>
+            <td><code>maxWidth</code></td>
+            <td>Dp</td>
+            <td>460.dp</td>
+            <td>Maximum width (useful for tablets)</td>
+        </tr>
+        <tr>
+            <td><code>iconsSize</code></td>
+            <td>Dp</td>
+            <td>20.dp</td>
+            <td>Size of navigation icons</td>
+        </tr>
+        <tr>
+            <td><code>animationDuration</code></td>
+            <td>Int</td>
+            <td>250</td>
+            <td>Animation duration in milliseconds</td>
+        </tr>
+        <tr>
+            <td><code>enableBlur</code></td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Enable glassmorphism blur effect</td>
+        </tr>
+        <tr>
+            <td><code>blurIntensity</code></td>
+            <td>Float</td>
+            <td>0.95f</td>
+            <td>Blur intensity (0.0 to 1.0)</td>
+        </tr>
+        <tr>
+            <td><code>showLabels</code></td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Show text labels below icons</td>
+        </tr>
+        <tr>
+            <td><code>showBorder</code></td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Show border around navigation bar</td>
+        </tr>
+        <tr>
+            <td><code>elevation</code></td>
+            <td>Dp</td>
+            <td>0.dp</td>
+            <td>Shadow elevation</td>
+        </tr>
+        <tr>
+            <td><code>navIndicator</code></td>
+            <td>NavIndicator</td>
+            <td>Dot()</td>
+            <td>Selection indicator style</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://github.com/Alims-Repo/FlowTab-CMP">GitHub</a>
+            <a href="https://github.com/Alims-Repo/FlowTab-CMP/blob/main/README.md">Documentation</a>
+            <a href="https://github.com/Alims-Repo/FlowTab-CMP/issues">Issues</a>
+            <a href="https://github.com/Alims-Repo/FlowTab-CMP/discussions">Discussions</a>
+            <a href="https://search.maven.org/artifact/io.github.alims-repo/flowtab-cmp">Maven Central</a>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Licensed under Apache License 2.0</p>
+            <p style="margin-top: 0.5rem;">Made by <a href="https://github.com/Alims-Repo" style="color: rgba(255,255,255,0.7); text-decoration: none;">Alim</a></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function showTab(tabId) {
+        document.querySelectorAll('.code-block').forEach(block => {
+            if (block.id) block.style.display = 'none';
+        });
+
+        document.querySelectorAll('.code-tab').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        document.getElementById(tabId).style.display = 'block';
+        event.target.classList.add('active');
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+</body>
+</html>
