@@ -21,60 +21,12 @@
 
 ### In Action
 
-<img src="media/flowtab-demo.gif" alt="FlowTab Demo" width="300"/>
+| Demo 1 | Demo 2 |
+|--------|--------|
+| <img src="media/flowtab-demo-light.gif" width="250"/> | <img src="media/flowtab-demo.gif" width="250"/> |
+
 
 *Smooth animations, expandable search, and glassmorphism effects*
-
-### Different Styles
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="media/screenshot-pill-style.png" alt="Pill Style" width="250"/><br/>
-      <b>Modern Pill Style</b>
-    </td>
-    <td align="center">
-      <img src="media/screenshot-instagram-style.png" alt="Instagram Style" width="250"/><br/>
-      <b>Instagram Style</b>
-    </td>
-    <td align="center">
-      <img src="media/screenshot-floating-style.png" alt="Floating Style" width="250"/><br/>
-      <b>Floating Minimal</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="media/screenshot-search-expanded.png" alt="Search Expanded" width="250"/><br/>
-      <b>Expandable Search</b>
-    </td>
-    <td align="center">
-      <img src="media/screenshot-with-badges.png" alt="With Badges" width="250"/><br/>
-      <b>Badge Support</b>
-    </td>
-    <td align="center">
-      <img src="media/screenshot-glassmorphism.png" alt="Glassmorphism" width="250"/><br/>
-      <b>Glassmorphism Effect</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="media/screenshot-top-button.png" alt="Top Button" width="250"/><br/>
-      <b>Floating Top Button</b>
-    </td>
-    <td align="center">
-      <img src="media/screenshot-isolated-item.png" alt="Isolated Item" width="250"/><br/>
-      <b>Isolated Action Items</b>
-    </td>
-    <td align="center">
-      <img src="media/screenshot-dark-mode.png" alt="Dark Mode" width="250"/><br/>
-      <b>Dark Mode Support</b>
-    </td>
-  </tr>
-</table>
-
-</div>
-
----
 
 ## ✨ Features
 
