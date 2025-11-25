@@ -707,51 +707,6 @@ sealed class NavIndicator {
 }
 ```
 
-## 🔘 Top Button Configuration
-
-The top button is a special floating action button that sits above the navigation bar:
-
-```kotlin
-data class TopButton(
-    val icon: ImageVector,              // Icon to display
-    val onClick: () -> Unit,            // Click handler
-    val backgroundColor: Color = ...,   // Button background color
-    val iconColor: Color = ...,         // Icon tint color
-    val size: Dp = 56.dp,              // Button diameter
-    val elevation: Dp = 6.dp,          // Shadow elevation
-    val rotation: Float = 0f,          // Icon rotation in degrees
-    val shape: Shape = CircleShape,    // Button shape
-    val badge: BadgeData? = null       // Optional badge
-)
-```
-
-**Visual Hierarchy:**
-- The top button automatically creates a cutout in the navigation bar
-- It's elevated above the navigation (higher z-index)
-- Perfect for primary actions like "Create", "Scan", "Camera"
-- Doesn't participate in navigation selection state
-
-**Example with All Options:**
-
-```kotlin
-BottomNavigation(
-    items = navItems,
-    selectedId = selectedId,
-    onItemSelected = { item -> selectedId = item.id },
-    topButton = TopButton(
-        icon = Icons.Default.QrCodeScanner,
-        onClick = { startQrScanner() },
-        backgroundColor = Color(0xFF6200EE),
-        iconColor = Color.White,
-        size = 64.dp,
-        elevation = 12.dp,
-        rotation = 0f,
-        shape = RoundedCornerShape(16.dp),  // Squircle shape
-        badge = BadgeData(showDot = true)    // Activity indicator
-    )
-)
-```
-
 ---
 
 ## 📖 Configuration Reference
