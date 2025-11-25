@@ -4,7 +4,7 @@
 
 **A beautiful, animated, and completely framework-agnostic bottom navigation bar for Jetpack Compose and Compose Multiplatform**
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/flow-tab?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/io.github.alims-repo/flow-tab)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/flow-tab-cmp?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/io.github.alims-repo/flow-tab-cmp)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-purple.svg?logo=kotlin)](http://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.9.3-brightgreen)](https://www.jetbrains.com/lp/compose-multiplatform/)
@@ -37,10 +37,10 @@ Add to your `libs.versions.toml`:
 
 ```toml
 [versions]
-flow-tab = "1.0.0"
+flow-tab-cmp = "1.0.0"
 
 [libraries]
-flow-tab = { module = "io.github.alims-repo:flow-tab", version.ref = "flow-tab" }
+flow-tab-cmp = { module = "io.github.alims-repo:flow-tab-cmp", version.ref = "flow-tab-cmp" }
 ```
 
 Then in your module's `build.gradle.kts`:
@@ -55,7 +55,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'io.github.alims-repo:flow-tab:1.0.0'
+    implementation 'io.github.alims-repo:flow-tab-cmp:1.0.0'
 }
 ```
 
@@ -600,10 +600,10 @@ limitations under the License.
 
 ## 📞 Support & Community
 
-- 🐛 [Report a Bug](https://github.com/Alims-Repo/flow-tab/issues/new?template=bug_report.md)
-- 💡 [Request a Feature](https://github.com/Alims-Repo/flow-tab/issues/new?template=feature_request.md)
-- 💬 [Join Discussions](https://github.com/Alims-Repo/flow-tab/discussions)
-- 📧 Contact: your.email@example.com
+- 🐛 [Report a Bug](https://github.com/Alims-Repo/flow-tab-cmp/issues/new?template=bug_report.md)
+- 💡 [Request a Feature](https://github.com/Alims-Repo/flow-tab-cmp/issues/new?template=feature_request.md)
+- 💬 [Join Discussions](https://github.com/Alims-Repo/flow-tab-cmp/discussions)
+- 📧 Contact: sourav.0.alim@gmail.com
 
 ---
 
