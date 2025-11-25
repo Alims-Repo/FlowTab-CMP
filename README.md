@@ -37,7 +37,7 @@ Add to your `libs.versions.toml`:
 
 ```toml
 [versions]
-flowtab-cmp = "1.0.0"
+flowtab-cmp = "0.5.1-beta"
 
 [libraries]
 flowtab-cmp = { module = "io.github.alims-repo:flowtab-cmp", version.ref = "flowtab-cmp" }
@@ -47,7 +47,7 @@ Then in your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation(libs.flow.tab)
+    implementation(libs.flowtab.cmp)
 }
 ```
 
@@ -55,7 +55,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'io.github.alims-repo:flowtab-cmp:1.0.0'
+    implementation 'io.github.alims-repo:flowtab-cmp:0.5.1-beta'
 }
 ```
 
@@ -565,14 +565,16 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-Please read our [Contributing Guide](CONTRIBUTING.md) for more details.
+Please read our [Contributing Guide](https://github.com/Alims-Repo/FlowTab-CMP/blob/main/CONTRIBUTING.md) for more details.
 
 ---
 
 ## 📄 License
 
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/Alims-Repo/FlowTab-CMP/blob/main/LICENSE) file for details.
+
 ```
-Copyright 2024 Alim
+Copyright 2025 Alim
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -600,9 +602,9 @@ limitations under the License.
 
 ## 📞 Support & Community
 
-- 🐛 [Report a Bug](https://github.com/Alims-Repo/flowtab-cmp/issues/new?template=bug_report.md)
-- 💡 [Request a Feature](https://github.com/Alims-Repo/flowtab-cmp/issues/new?template=feature_request.md)
-- 💬 [Join Discussions](https://github.com/Alims-Repo/flowtab-cmp/discussions)
+- 🐛 [Report a Bug](https://github.com/Alims-Repo/FlowTab-CMP/issues/new?template=bug_report.md)
+- 💡 [Request a Feature](https://github.com/Alims-Repo/FlowTab-CMP/issues/new?template=feature_request.md)
+- 💬 [Join Discussions](https://github.com/Alims-Repo/FlowTab-CMP/discussions)
 - 📧 Contact: sourav.0.alim@gmail.com
 
 ---
