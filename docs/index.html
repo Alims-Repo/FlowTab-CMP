@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowTab - Bottom Navigation for Compose Multiplatform</title>
-    <meta name="description" content="A framework-agnostic bottom navigation bar for Jetpack Compose and Compose Multiplatform">
+    <title>FlowTab - Modern Bottom Navigation for Compose Multiplatform</title>
+    <meta name="description" content="A beautiful, animated bottom navigation component for Jetpack Compose and Compose Multiplatform. Framework-agnostic, production-ready. ">
+    <meta name="keywords" content="compose, jetpack compose, bottom navigation, kotlin, android, ios">
+
     <style>
         * {
             margin: 0;
@@ -13,772 +15,1825 @@
         }
 
         :root {
-            --primary: #1976D2;
-            --primary-dark: #0D47A1;
-            --text-dark: #212121;
-            --text-secondary: #757575;
-            --border: #E0E0E0;
-            --bg-light: #FAFAFA;
-            --bg-white: #FFFFFF;
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-lighter: #60a5fa;
+            --primary-50: #eff6ff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0. 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: var(--text-dark);
-            line-height: 1.7;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-primary);
+            background: var(--gray-50);
+            line-height: 1.6;
         }
 
+        /* Utility Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .gap-2 { gap: 8px; }
+        .gap-3 { gap: 12px; }
+        .gap-4 { gap: 16px; }
+        .gap-6 { gap: 24px; }
+        .gap-8 { gap: 32px; }
+
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+
+        .mb-2 { margin-bottom: 8px; }
+        . mb-3 { margin-bottom: 12px; }
+        .mb-4 { margin-bottom: 16px; }
+        .mb-6 { margin-bottom: 24px; }
+        .mb-8 { margin-bottom: 32px; }
+        .mb-12 { margin-bottom: 48px; }
+
+        .mt-4 { margin-top: 16px; }
+        .mt-6 { margin-top: 24px; }
+        .mt-8 { margin-top: 32px; }
+
+        .p-4 { padding: 16px; }
+        .p-6 { padding: 24px; }
+        .p-8 { padding: 32px; }
+
+        .rounded-lg { border-radius: 8px; }
+        .rounded-xl { border-radius: 12px; }
+        .rounded-full { border-radius: 9999px; }
+
+        .text-center { text-align: center; }
+
+        . w-full { width: 100%; }
+
+        /* Typography */
+        h1 { font-size: 3.5rem; font-weight: 700; line-height: 1.1; }
+        h2 { font-size: 2.25rem; font-weight: 700; line-height: 1. 2; }
+        h3 { font-size: 1.5rem; font-weight: 600; }
+        h4 { font-size: 1.25rem; font-weight: 600; }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        small {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        /* Header */
         .header {
-            background: var(--bg-white);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        .header.scrolled {
+            box-shadow: var(--shadow-md);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-wrapper {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 16px 0;
         }
 
-        .logo-title {
+        .logo {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 32px;
             list-style: none;
         }
 
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
+            font-size: 0.95rem;
             font-weight: 500;
-            transition: color 0.2s;
+            transition: color 0.3s;
+            position: relative;
         }
 
         .nav-links a:hover {
             color: var(--primary);
         }
 
-        .hero {
-            background: var(--bg-white);
-            padding: 5rem 2rem 3rem;
-            text-align: center;
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
         }
 
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .badges {
-            display: flex;
-            gap: 0.75rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        .badge-img {
-            height: 20px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
+        /* Button Styles - Enhanced */
         .btn {
-            padding: 0.75rem 2rem;
-            border-radius: 6px;
-            text-decoration: none;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
             font-weight: 600;
-            transition: all 0.2s;
-            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0. 3);
         }
 
-        .btn-primary:hover {
-            background: var(--primary-dark);
+        . btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
         }
 
-        .btn-secondary {
-            background: transparent;
+        .btn-primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary svg {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(2px);
+        }
+
+        . btn-secondary {
+            background: white;
             color: var(--primary);
-            border: 2px solid var(--primary);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 10px 22px;
         }
 
         .btn-secondary:hover {
-            background: var(--bg-light);
+            background: var(--primary-50);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.2);
         }
 
-        .demo-section {
-            background: var(--bg-light);
-            padding: 3rem 2rem;
+        .btn-secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+        }
+
+        . btn-white {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 14px 32px;
+        }
+
+        . btn-white:hover {
+            background: var(--gray-50);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-white:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            box-shadow: none;
+            padding: 10px 24px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline:active {
+            transform: translateY(0);
+        }
+
+        . version-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: var(--primary-50);
+            color: var(--primary-dark);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .version-badge:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+            padding: 100px 20px;
             text-align: center;
         }
 
-        .demo-images {
-            max-width: 1000px;
-            margin: 2rem auto 0;
+        . hero h1 {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .hero > p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--text-secondary);
+        }
+
+        .hero-cta {
             display: flex;
-            gap: 2rem;
+            gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 40px;
         }
 
-        .demo-img {
-            width: 280px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid var(--border);
+        . badges {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
         }
 
+        .badge-img {
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .badge-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Section */
         .section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
+            padding: 80px 20px;
+        }
+
+        .section-alt {
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            max-width: 600px;
             margin: 0 auto;
         }
 
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .features {
+        /* Demo Section */
+        .demo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 40px;
         }
 
-        .feature {
-            padding: 1.5rem;
+        . demo-content h3 {
+            margin-bottom: 16px;
+            color: var(--text-primary);
         }
 
-        .feature-title {
+        .demo-content p {
+            margin-bottom: 16px;
+        }
+
+        .demo-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .demo-feature {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            transition: transform 0.3s ease;
+        }
+
+        .demo-feature:hover {
+            transform: translateX(4px);
+        }
+
+        . demo-feature-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-50);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            flex-shrink: 0;
             font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
         }
 
-        .feature-desc {
-            color: var(--text-secondary);
+        . demo-feature-text strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .demo-feature-text {
+            flex: 1;
+        }
+
+        /* GIF Player */
+        .gif-player {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        . gif-player:hover {
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+            transform: translateY(-4px);
+        }
+
+        . gif-player img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 100%;
+        }
+
+        . gif-label {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            padding: 24px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.15);
+            transform: translateY(-6px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h4 {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
             font-size: 0.95rem;
         }
 
+        /* Code Block */
         .code-section {
-            background: var(--bg-light);
-            padding: 4rem 2rem;
-        }
-
-        .code-container {
-            max-width: 900px;
-            margin: 0 auto;
+            background: white;
         }
 
         .code-tabs {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            gap: 0;
+            margin-bottom: 0;
         }
 
         .code-tab {
-            padding: 0.5rem 1.5rem;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-bottom: none;
-            border-radius: 6px 6px 0 0;
-            cursor: pointer;
-            font-weight: 500;
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
             color: var(--text-secondary);
-            transition: all 0.2s;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            position: relative;
+            margin-bottom: -2px;
         }
 
-        .code-tab.active {
-            background: var(--bg-white);
+        . code-tab:hover {
             color: var(--primary);
-            border-color: var(--border);
+        }
+
+        .code-tab. active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         .code-block {
-            background: var(--bg-white);
-            border: 1px solid var(--border);
-            border-radius: 0 6px 6px 6px;
-            padding: 1.5rem;
+            background: var(--gray-900);
+            padding: 24px;
+            border-radius: 0 0 12px 12px;
             overflow-x: auto;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .code-block.active {
+            display: block;
         }
 
         .code-block pre {
-            margin: 0;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.9rem;
+            color: #e5e7eb;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
             line-height: 1.6;
-            color: var(--text-dark);
+            margin: 0;
         }
 
-        .comment { color: #6A737D; }
-        .keyword { color: #D73A49; }
-        .string { color: #032F62; }
-        .function { color: #6F42C1; }
-
-        .indicators-section {
-            background: var(--bg-white);
-        }
-
-        .indicator-grid {
+        /* Installation Steps */
+        .steps {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+            counter-reset: step-counter;
+        }
+
+        .step {
+            padding: 24px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            counter-increment: step-counter;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+            transform: translateY(-3px);
+        }
+
+        . step::before {
+            content: counter(step-counter);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0. 3);
+        }
+
+        .step h4 {
+            margin-bottom: 8px;
+        }
+
+        /* Indicators Grid */
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
         }
 
         .indicator-card {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
+            padding: 32px 24px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .indicator-card:hover {
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
+            transform: translateY(-6px);
+            border-color: var(--primary-light);
         }
 
         .indicator-visual {
             font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .indicator-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .indicator-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .integration-section {
-            background: var(--bg-light);
-        }
-
-        .integration-list {
+            margin-bottom: 16px;
+            height: 80px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
+            align-items: center;
+            justify-content: center;
         }
 
-        .integration-item {
-            padding: 0.75rem 1.5rem;
-            background: var(--bg-white);
-            border: 1px solid var(--border);
+        .indicator-card h4 {
+            margin-bottom: 12px;
+        }
+
+        .use-case {
+            background: var(--primary-50);
+            padding: 12px;
             border-radius: 6px;
-            font-weight: 500;
-            color: var(--text-dark);
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+            border: 1px solid rgba(37, 99, 235, 0.2);
         }
 
-        .config-table {
+        /* Integrations Grid */
+        .integrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .integration {
+            padding: 24px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0. 4, 0, 0. 2, 1);
+        }
+
+        .integration:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+            transform: translateY(-4px);
+        }
+
+        . integration-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .integration:hover .integration-icon {
+            transform: scale(1.1);
+        }
+
+        .integration p {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* Config Table */
+        .table-wrapper {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-top: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 2rem;
-            background: var(--bg-white);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
+            font-size: 0.95rem;
         }
 
-        .config-table th,
-        .config-table td {
-            padding: 1rem;
+        th {
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            padding: 16px;
             text-align: left;
-            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
         }
 
-        .config-table th {
-            background: var(--bg-light);
-            font-weight: 600;
-            color: var(--text-dark);
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .config-table td {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        tr:hover {
+            background: var(--primary-50);
         }
 
-        .config-table tr:last-child td {
+        tr:last-child td {
             border-bottom: none;
         }
 
-        .footer {
-            background: var(--text-dark);
+        td code {
+            background: var(--gray-100);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: var(--primary);
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        /* Best Practices */
+        .practices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .practice-card {
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 5px solid;
+            transition: all 0. 3s ease;
+        }
+
+        .practice-card. do {
+            background: #f0fdf4;
+            border-left-color: #10b981;
+        }
+
+        .practice-card.dont {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+
+        .practice-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        . practice-card h4 {
+            margin-bottom: 16px;
+        }
+
+        .practice-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .practice-item::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .practice-card.dont .practice-item::before {
+            content: '✗';
+            color: #ef4444;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 3rem 2rem 2rem;
+            padding: 60px 32px;
             text-align: center;
+            border-radius: 16px;
+            margin-top: 40px;
+            box-shadow: 0 20px 50px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            color: white;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gray-900);
+            color: white;
+            padding: 60px 20px 20px;
+            margin-top: 80px;
         }
 
         .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        . footer-section h4 {
+            color: white;
+            margin-bottom: 16px;
+            font-weight: 700;
         }
 
         .footer-links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
+            list-style: none;
         }
 
         .footer-links a {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            transition: color 0.2s;
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 0;
         }
 
         .footer-links a:hover {
             color: white;
+            padding-left: 4px;
         }
 
         .footer-bottom {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9rem;
-            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
+        . footer-bottom p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-links a {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        . social-links a:active {
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
+            h1 { font-size: 2.25rem; }
+            h2 { font-size: 1.75rem; }
 
             .nav-links {
                 display: none;
             }
 
-            .demo-img {
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            . practices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            . hero {
+                padding: 60px 20px;
+            }
+
+            . hero h1 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .cta-buttons .btn {
                 width: 100%;
-                max-width: 300px;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .indicators-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .integrations-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 12px;
+            }
+
+            . step::before {
+                width: 40px;
+                height: 40px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1. 5rem; }
+            h3 { font-size: 1.25rem; }
+
+            .hero > p {
+                font-size: 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .hero-cta . btn {
+                width: 100%;
+            }
+
+            .badges {
+                gap: 8px;
+            }
+
+            .badge-img {
+                height: 20px;
+            }
+
+            . section {
+                padding: 40px 16px;
+            }
+
+            . section-header {
+                margin-bottom: 40px;
+            }
+
+            . integrations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-feature {
+                gap: 10px;
+            }
+
+            . demo-feature-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
+            }
+
+            .nav-wrapper {
+                padding: 12px 0;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            . logo-icon {
+                width: 28px;
+                height: 28px;
+            }
+
+            .btn {
+                padding: 11px 20px;
+                font-size: 0.9rem;
+            }
+
+            . cta-section {
+                padding: 48px 24px;
+                margin-top: 32px;
+                border-radius: 12px;
             }
         }
     </style>
 </head>
 <body>
 <!-- Header -->
-<header class="header">
-    <nav class="nav-container">
-        <div class="logo-title">FlowTab</div>
-        <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#installation">Installation</a></li>
-            <li><a href="#indicators">Indicators</a></li>
-            <li><a href="#configuration">Configuration</a></li>
-            <li><a href="https://github.com/Alims-Repo/FlowTab-CMP">GitHub</a></li>
-        </ul>
-    </nav>
+<header class="header" id="header">
+    <div class="container">
+        <div class="nav-wrapper">
+            <a href="#" class="logo">
+                <div class="logo-icon">⚡</div>
+                <span>FlowTab</span>
+            </a>
+            <nav style="display: flex; gap: 32px; align-items: center;">
+                <ul class="nav-links" style="display: flex;">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#indicators">Indicators</a></li>
+                    <li><a href="#integration">Integration</a></li>
+                </ul>
+                <a href="https://github.com/Alims-Repo/FlowTab-CMP" target="_blank" class="btn btn-primary">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-. 09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-. 01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-. 27.68 0 1.36.09 2 .27 1. 53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </nav>
+        </div>
+    </div>
 </header>
 
-<!-- Hero Section -->
+<!-- Hero -->
 <section class="hero">
-    <div class="hero-content">
-        <h1>FlowTab</h1>
-        <p class="hero-subtitle">
-            A framework-agnostic bottom navigation bar for Jetpack Compose and Compose Multiplatform with smooth animations and customizable styling.
-        </p>
+    <div class="container">
+        <span class="version-badge">v0.5.2-beta • Open Source</span>
+        <h1 class="mt-4">Beautiful Bottom Navigation<br>for Compose Multiplatform</h1>
+        <p>Framework-agnostic, production-ready, with smooth animations and zero navigation dependencies.</p>
 
-        <div class="badges">
-            <img src="https://img.shields.io/maven-central/v/io.github.alims-repo/flowtab-cmp?color=1976D2&label=Maven%20Central" alt="Maven Central" class="badge-img">
-            <img src="https://img.shields.io/badge/License-Apache%202.0-1976D2.svg" alt="License" class="badge-img">
-            <img src="https://img.shields.io/badge/Kotlin-2.2.21-7F52FF.svg?logo=kotlin" alt="Kotlin" class="badge-img">
-            <img src="https://img.shields.io/badge/Compose%20Multiplatform-1.9.3-4285F4" alt="Compose" class="badge-img">
+        <div class="badges mt-8">
+            <img src="https://img.shields.io/maven-central/v/io.github.alims-repo/flowtab-cmp?color=2563eb&style=flat-square" alt="Maven Central" class="badge-img">
+            <img src="https://img.shields.io/badge/License-Apache%202.0-2563eb?style=flat-square" alt="License" class="badge-img">
+            <img src="https://img.shields.io/badge/Kotlin-2.2.21-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin" class="badge-img">
+            <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-success?style=flat-square" alt="Platform" class="badge-img">
         </div>
 
-        <div class="btn-group">
-            <a href="https://github.com/Alims-Repo/FlowTab-CMP" class="btn btn-primary">View on GitHub</a>
+        <div class="hero-cta mt-8">
+            <a href="https://github.com/Alims-Repo/FlowTab-CMP" target="_blank" class="btn btn-primary">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-. 21 2.2.82. 64-.18 1.32-. 27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15. 46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                View on GitHub
+            </a>
             <a href="#installation" class="btn btn-secondary">Get Started</a>
         </div>
     </div>
 </section>
 
 <!-- Demo Section -->
-<section class="demo-section">
-    <div class="demo-images">
-        <img src="media/flowtab-demo-light.gif" alt="FlowTab Light Theme" class="demo-img" onerror="this.style.display='none'">
-        <img src="media/flowtab-demo.gif" alt="FlowTab Dark Theme" class="demo-img" onerror="this.style.display='none'">
+<section class="section section-alt" id="demo">
+    <div class="container">
+        <div class="section-header">
+            <h2>See It In Action</h2>
+            <p>Smooth animations and beautiful design that feels native</p>
+        </div>
+
+        <div class="demo-grid">
+            <div class="demo-content">
+                <h3>Production-Ready Animations</h3>
+                <p>Experience fluid transitions and smooth interactions designed for real-world applications.</p>
+
+                <div class="demo-features">
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">✓</div>
+                        <div class="demo-feature-text">
+                            <strong>Smooth Scale Effects</strong>
+                            <p>Icons animate with perfect timing and easing</p>
+                        </div>
+                    </div>
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">✓</div>
+                        <div class="demo-feature-text">
+                            <strong>Expandable Search Bar</strong>
+                            <p>Beautiful search integration with natural animations</p>
+                        </div>
+                    </div>
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">✓</div>
+                        <div class="demo-feature-text">
+                            <strong>Glassmorphism Effects</strong>
+                            <p>Optional blur effects with Haze integration</p>
+                        </div>
+                    </div>
+                    <div class="demo-feature">
+                        <div class="demo-feature-icon">✓</div>
+                        <div class="demo-feature-text">
+                            <strong>Badge Notifications</strong>
+                            <p>Show counts or indicators on navigation items</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replace the demo grid section with this -->
+            <div style="margin-top: 40px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 700px; margin: 0 auto;">
+                    <!-- Light Theme GIF -->
+                    <div style="text-align: center;">
+                        <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; padding: 0; overflow: hidden; box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: inline-block; width: 100%;">
+                            <img
+                                    src="https://raw.githubusercontent.com/Alims-Repo/FlowTab-CMP/main/media/flowtab-demo-light.gif"
+                                    alt="Light Theme Demo"
+                                    style="width: 100%; display: block; border-radius: 12px 12px 0 0;"
+                                    loading="lazy"
+                            >
+                        </div>
+                        <p style="margin-top: 16px; font-weight: 600; color: #111827;">Light Theme</p>
+                        <small style="color: #6b7280;">Smooth & Minimal</small>
+                    </div>
+
+                    <!-- Dark Theme GIF -->
+                    <div style="text-align: center;">
+                        <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; padding: 0; overflow: hidden; box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; display: inline-block; width: 100%;">
+                            <img
+                                    src="https://raw.githubusercontent.com/Alims-Repo/FlowTab-CMP/main/media/flowtab-demo.gif"
+                                    alt="Dark Theme Demo"
+                                    style="width: 100%; display: block; border-radius: 12px 12px 0 0;"
+                                    loading="lazy"
+                            >
+                        </div>
+                        <p style="margin-top: 16px; font-weight: 600; color: #111827;">Dark Theme</p>
+                        <small style="color: #6b7280;">Bold & Vibrant</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- Features Section -->
 <section class="section" id="features">
-    <h2 class="section-title">Key Features</h2>
-    <div class="features">
-        <div class="feature">
-            <h3 class="feature-title">Framework Agnostic</h3>
-            <p class="feature-desc">Works with any navigation solution including Navigation Compose, Decompose, Voyager, PreCompose, Appyx, or plain state management.</p>
+    <div class="container">
+        <div class="section-header">
+            <h2>Powerful Features</h2>
+            <p>Everything you need for production-grade navigation</p>
         </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Smooth Animations</h3>
-            <p class="feature-desc">Built-in smooth transitions, scale effects, and fluid search bar expansion with customizable timing.</p>
-        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h4>Framework Agnostic</h4>
+                <p>Works with Navigation3, Decompose, Voyager, or plain state—you control the logic.</p>
+            </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Expandable Search</h3>
-            <p class="feature-desc">Built-in expandable search bar with real-time query callbacks and search submission handling.</p>
-        </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h4>Beautiful Animations</h4>
+                <p>Smooth 60fps transitions and scale effects that feel native on all devices.</p>
+            </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Glassmorphism Effects</h3>
-            <p class="feature-desc">Optional blur effects powered by Haze library for modern, premium visual appearance.</p>
-        </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h4>Search Integration</h4>
+                <p>Built-in expandable search with customizable callbacks. </p>
+            </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Badge Support</h3>
-            <p class="feature-desc">Display notification counts or dot indicators with customizable colors and styling.</p>
-        </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎭</div>
+                <h4>Glassmorphism</h4>
+                <p>Optional blur effects with Haze integration for stunning visuals.</p>
+            </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Custom Indicators</h3>
-            <p class="feature-desc">Choose from Ripple, Dot, or Line selection indicators to match your design system.</p>
-        </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h4>Badge Support</h4>
+                <p>Show notification counts or dots without extra UI elements.</p>
+            </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Lightweight</h3>
-            <p class="feature-desc">Zero navigation dependencies, minimal overhead, optimized for performance and memory efficiency.</p>
-        </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h4>Lightweight</h4>
+                <p>Zero navigation dependencies, minimal overhead, tiny footprint.</p>
+            </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Multiplatform</h3>
-            <p class="feature-desc">Full support for Android and iOS (iosArm64, iosX64, iosSimulatorArm64) with shared codebase.</p>
-        </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎛️</div>
+                <h4>Highly Customizable</h4>
+                <p>Extensive styling options with sensible defaults.</p>
+            </div>
 
-        <div class="feature">
-            <h3 class="feature-title">Highly Customizable</h3>
-            <p class="feature-desc">Extensive styling options including colors, heights, corner radius, elevations, and animations.</p>
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h4>Multiplatform</h4>
+                <p>Android, iOS, and more. Share code across platforms.</p>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Installation Section -->
-<section class="code-section" id="installation">
-    <div class="code-container">
-        <h2 class="section-title">Installation</h2>
-
-        <div class="code-tabs">
-            <button class="code-tab active" onclick="showTab('gradle-kts')">Gradle (Kotlin DSL)</button>
-            <button class="code-tab" onclick="showTab('gradle-groovy')">Gradle (Groovy)</button>
+<section class="section section-alt code-section" id="installation">
+    <div class="container">
+        <div class="section-header">
+            <h2>Installation</h2>
+            <p>Add FlowTab to your project in minutes</p>
         </div>
 
-        <div id="gradle-kts" class="code-block">
-                <pre><span class="comment">// Add to libs.versions.toml</span>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="code-tabs">
+                <button class="code-tab active" onclick="switchTab(event, 0)">libs. versions.toml</button>
+                <button class="code-tab" onclick="switchTab(event, 1)">build.gradle.kts</button>
+                <button class="code-tab" onclick="switchTab(event, 2)">Groovy DSL</button>
+            </div>
+
+            <div class="code-block active" id="code-0">
+                    <pre># In your libs.versions.toml (Recommended)
 [versions]
-flowtab-cmp = <span class="string">"0.5.1-beta"</span>
+flowtab-cmp = "0.5.1-beta"
 
 [libraries]
-flowtab-cmp = { module = <span class="string">"io.github.alims-repo:flowtab-cmp"</span>, version.ref = <span class="string">"flowtab-cmp"</span> }
+flowtab-cmp = { module = "io.github.alims-repo:flowtab-cmp", version.ref = "flowtab-cmp" }</pre>
+            </div>
 
-<span class="comment">// In your module's build.gradle.kts</span>
-<span class="keyword">dependencies</span> {
-    <span class="function">implementation</span>(libs.flowtab.cmp)
+            <div class="code-block" id="code-1">
+                    <pre>// In your module's build.gradle.kts
+dependencies {
+    implementation(libs.flowtab.cmp)
 }</pre>
+            </div>
+
+            <div class="code-block" id="code-2">
+                    <pre>// build.gradle (Groovy DSL)
+dependencies {
+    implementation 'io.github.alims-repo:flowtab-cmp:0.5.1-beta'
+}</pre>
+            </div>
         </div>
 
-        <div id="gradle-groovy" class="code-block" style="display:none;">
-                <pre><span class="keyword">dependencies</span> {
-    <span class="function">implementation</span> <span class="string">'io.github.alims-repo:flowtab-cmp:0.5.1-beta'</span>
-}</pre>
-        </div>
+        <div class="steps mt-8">
+            <div class="step">
+                <h4>Define Items</h4>
+                <p>Create a list of NavItem with labels and icons</p>
+            </div>
 
-        <h3 style="margin-top: 3rem; margin-bottom: 1rem; font-size: 1.5rem;">Quick Start</h3>
+            <div class="step">
+                <h4>Add Component</h4>
+                <p>Place BottomNavigation in your Scaffold</p>
+            </div>
 
-        <div class="code-block">
-                <pre><span class="keyword">@Composable</span>
-<span class="keyword">fun</span> <span class="function">MyApp</span>() {
-    <span class="keyword">var</span> selectedScreen <span class="keyword">by</span> <span class="function">remember</span> { <span class="function">mutableStateOf</span>(<span class="string">"home"</span>) }
-
-    <span class="keyword">val</span> navItems = <span class="function">remember</span> {
-        <span class="function">listOf</span>(
-            <span class="function">NavItem</span>(
-                id = <span class="string">"home"</span>,
-                label = <span class="string">"Home"</span>,
-                icon = Icons.Outlined.Home,
-                selectedIcon = Icons.Filled.Home
-            ),
-            <span class="function">NavItem</span>(
-                id = <span class="string">"search"</span>,
-                label = <span class="string">"Search"</span>,
-                icon = Icons.Default.Search,
-                type = NavItemType.Search
-            ),
-            <span class="function">NavItem</span>(
-                id = <span class="string">"profile"</span>,
-                label = <span class="string">"Profile"</span>,
-                icon = Icons.Outlined.Person,
-                selectedIcon = Icons.Filled.Person,
-                badge = <span class="function">BadgeData</span>(count = 3)
-            )
-        )
-    }
-
-    <span class="function">Scaffold</span>(
-        bottomBar = {
-            <span class="function">BottomNavigation</span>(
-                items = navItems,
-                selectedId = selectedScreen,
-                onItemSelected = { item -> selectedScreen = item.id }
-            )
-        }
-    ) { padding ->
-        <span class="comment">// Your screen content</span>
-    }
-}</pre>
+            <div class="step">
+                <h4>Handle Selection</h4>
+                <p>Update state on item selection and navigate</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Selection Indicators Section -->
-<section class="section indicators-section" id="indicators">
-    <h2 class="section-title">Selection Indicators</h2>
-    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Choose from three indicator styles to match your design system:</p>
-
-    <div class="indicator-grid">
-        <div class="indicator-card">
-            <div class="indicator-visual">━━</div>
-            <h3 class="indicator-name">Ripple</h3>
-            <p class="indicator-desc">Full-width background highlight. Bold and high-contrast design.</p>
+<!-- Indicators Section -->
+<section class="section" id="indicators">
+    <div class="container">
+        <div class="section-header">
+            <h2>Selection Indicators</h2>
+            <p>Choose the style that matches your design</p>
         </div>
 
-        <div class="indicator-card">
-            <div class="indicator-visual">●</div>
-            <h3 class="indicator-name">Dot</h3>
-            <p class="indicator-desc">Small circular indicator. Minimal and modern style.</p>
+        <div class="indicators-grid">
+            <div class="indicator-card">
+                <div class="indicator-visual">◼️</div>
+                <h4>Ripple</h4>
+                <p>Full-width background highlight. Perfect for bold designs and high contrast.</p>
+                <div class="use-case">Material Design 2 • Bold branding</div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-visual">●</div>
+                <h4>Dot</h4>
+                <p>Small circular indicator below items. Modern and minimal aesthetic.</p>
+                <div class="use-case">Instagram-style • Clean layouts</div>
+            </div>
+
+            <div class="indicator-card">
+                <div class="indicator-visual">—</div>
+                <h4>Line</h4>
+                <p>Horizontal line below selected item. Material Design 3 style.</p>
+                <div class="use-case">Material Design 3 • Elegant UI</div>
+            </div>
         </div>
-
-        <div class="indicator-card">
-            <div class="indicator-visual">▬</div>
-            <h3 class="indicator-name">Line</h3>
-            <p class="indicator-desc">Horizontal line indicator. Material Design 3 style.</p>
-        </div>
-    </div>
-
-    <div class="code-block" style="margin-top: 2rem;">
-            <pre><span class="comment">// Ripple Indicator</span>
-<span class="function">BottomNavigation</span>(
-    config = <span class="function">NavConfig</span>(
-        navIndicator = <span class="function">NavIndicator.Ripple</span>(
-            color = MaterialTheme.colorScheme.primaryContainer
-        )
-    )
-)
-
-<span class="comment">// Dot Indicator</span>
-<span class="function">BottomNavigation</span>(
-    config = <span class="function">NavConfig</span>(
-        navIndicator = <span class="function">NavIndicator.Dot</span>(
-            size = 8.dp,
-            color = MaterialTheme.colorScheme.primary
-        )
-    )
-)
-
-<span class="comment">// Line Indicator</span>
-<span class="function">BottomNavigation</span>(
-    config = <span class="function">NavConfig</span>(
-        navIndicator = <span class="function">NavIndicator.Line</span>(
-            height = 3.dp,
-            width = 40.dp,
-            color = MaterialTheme.colorScheme.primary
-        )
-    )
-)</pre>
     </div>
 </section>
 
 <!-- Integration Section -->
-<section class="section integration-section">
-    <h2 class="section-title">Framework Compatibility</h2>
-    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-        FlowTab works seamlessly with any navigation framework or state management solution:
-    </p>
+<section class="section section-alt" id="integration">
+    <div class="container">
+        <div class="section-header">
+            <h2>Framework Integration</h2>
+            <p>Works with any navigation solution</p>
+        </div>
 
-    <div class="integration-list">
-        <div class="integration-item">Navigation Compose</div>
-        <div class="integration-item">Decompose</div>
-        <div class="integration-item">Voyager</div>
-        <div class="integration-item">PreCompose</div>
-        <div class="integration-item">Appyx</div>
-        <div class="integration-item">Plain State Management</div>
+        <div class="integrations-grid">
+            <div class="integration">
+                <div class="integration-icon">🧭</div>
+                <p>Navigation Compose</p>
+            </div>
+
+            <div class="integration">
+                <div class="integration-icon">📦</div>
+                <p>Decompose</p>
+            </div>
+
+            <div class="integration">
+                <div class="integration-icon">🚀</div>
+                <p>Voyager</p>
+            </div>
+
+            <div class="integration">
+                <div class="integration-icon">🎨</div>
+                <p>PreCompose</p>
+            </div>
+
+            <div class="integration">
+                <div class="integration-icon">🏗️</div>
+                <p>Appyx</p>
+            </div>
+
+            <div class="integration">
+                <div class="integration-icon">📊</div>
+                <p>Plain State</p>
+            </div>
+        </div>
     </div>
-
-    <p style="color: var(--text-secondary); margin-top: 2rem;">
-        See the <a href="https://github.com/Alims-Repo/FlowTab-CMP#-integration-examples" style="color: var(--primary); text-decoration: none;">GitHub README</a> for detailed integration examples.
-    </p>
 </section>
 
 <!-- Configuration Section -->
-<section class="section" id="configuration">
-    <h2 class="section-title">Configuration Options</h2>
+<section class="section" id="config">
+    <div class="container">
+        <div class="section-header">
+            <h2>Configuration</h2>
+            <p>Customize every aspect of your navigation</p>
+        </div>
 
-    <table class="config-table">
-        <thead>
-        <tr>
-            <th>Parameter</th>
-            <th>Type</th>
-            <th>Default</th>
-            <th>Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><code>height</code></td>
-            <td>Dp</td>
-            <td>60.dp</td>
-            <td>Height of the navigation bar</td>
-        </tr>
-        <tr>
-            <td><code>cornerRadius</code></td>
-            <td>Dp</td>
-            <td>60.dp</td>
-            <td>Corner radius for rounded edges</td>
-        </tr>
-        <tr>
-            <td><code>maxWidth</code></td>
-            <td>Dp</td>
-            <td>460.dp</td>
-            <td>Maximum width (useful for tablets)</td>
-        </tr>
-        <tr>
-            <td><code>iconsSize</code></td>
-            <td>Dp</td>
-            <td>20.dp</td>
-            <td>Size of navigation icons</td>
-        </tr>
-        <tr>
-            <td><code>animationDuration</code></td>
-            <td>Int</td>
-            <td>250</td>
-            <td>Animation duration in milliseconds</td>
-        </tr>
-        <tr>
-            <td><code>enableBlur</code></td>
-            <td>Boolean</td>
-            <td>true</td>
-            <td>Enable glassmorphism blur effect</td>
-        </tr>
-        <tr>
-            <td><code>blurIntensity</code></td>
-            <td>Float</td>
-            <td>0.95f</td>
-            <td>Blur intensity (0.0 to 1.0)</td>
-        </tr>
-        <tr>
-            <td><code>showLabels</code></td>
-            <td>Boolean</td>
-            <td>true</td>
-            <td>Show text labels below icons</td>
-        </tr>
-        <tr>
-            <td><code>showBorder</code></td>
-            <td>Boolean</td>
-            <td>true</td>
-            <td>Show border around navigation bar</td>
-        </tr>
-        <tr>
-            <td><code>elevation</code></td>
-            <td>Dp</td>
-            <td>0.dp</td>
-            <td>Shadow elevation</td>
-        </tr>
-        <tr>
-            <td><code>navIndicator</code></td>
-            <td>NavIndicator</td>
-            <td>Dot()</td>
-            <td>Selection indicator style</td>
-        </tr>
-        </tbody>
-    </table>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>height</code></td>
+                    <td>Dp</td>
+                    <td>60.dp</td>
+                    <td>Height of the navigation bar</td>
+                </tr>
+                <tr>
+                    <td><code>cornerRadius</code></td>
+                    <td>Dp</td>
+                    <td>60.dp</td>
+                    <td>Border radius for rounded corners</td>
+                </tr>
+                <tr>
+                    <td><code>maxWidth</code></td>
+                    <td>Dp</td>
+                    <td>460.dp</td>
+                    <td>Maximum width (for tablets)</td>
+                </tr>
+                <tr>
+                    <td><code>animationDuration</code></td>
+                    <td>Int</td>
+                    <td>250</td>
+                    <td>Duration in milliseconds</td>
+                </tr>
+                <tr>
+                    <td><code>enableBlur</code></td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>Enable blur effects</td>
+                </tr>
+                <tr>
+                    <td><code>showLabels</code></td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>Show text labels</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Best Practices Section -->
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <h2>Best Practices</h2>
+            <p>Follow these patterns for optimal implementation</p>
+        </div>
+
+        <div class="practices-grid">
+            <div class="practice-card do">
+                <h4>✓ Recommended</h4>
+                <div class="practice-item">Keep NavItems stable with <code>remember</code></div>
+                <div class="practice-item">Use descriptive, unique IDs</div>
+                <div class="practice-item">Match indicator to your design language</div>
+                <div class="practice-item">Handle search with debouncing</div>
+                <div class="practice-item">Test on different screen sizes</div>
+            </div>
+
+            <div class="practice-card dont">
+                <h4>✗ Avoid</h4>
+                <div class="practice-item">Recreating items on every recomposition</div>
+                <div class="practice-item">Using generic or duplicate IDs</div>
+                <div class="practice-item">Expensive operations in onQueryChange</div>
+                <div class="practice-item">Ignoring state management edge cases</div>
+                <div class="practice-item">Adding too many items (5-7 recommended)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section">
+    <div class="container">
+        <div class="cta-section">
+            <h2>Ready to Build?</h2>
+            <p>Start using FlowTab today and deliver beautiful navigation to your users.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/Alims-Repo/FlowTab-CMP" target="_blank" class="btn btn-white">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-. 49-2.69-.94-. 09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1. 53-1.04 2.2-. 82 2.2-.82. 44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95. 29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+                <a href="#installation" class="btn btn-outline">Installation Guide</a>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- Footer -->
 <footer class="footer">
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="https://github.com/Alims-Repo/FlowTab-CMP">GitHub</a>
-            <a href="https://github.com/Alims-Repo/FlowTab-CMP/blob/main/README.md">Documentation</a>
-            <a href="https://github.com/Alims-Repo/FlowTab-CMP/issues">Issues</a>
-            <a href="https://github.com/Alims-Repo/FlowTab-CMP/discussions">Discussions</a>
-            <a href="https://search.maven.org/artifact/io.github.alims-repo/flowtab-cmp">Maven Central</a>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/Alims-Repo/FlowTab-CMP" target="_blank">Repository</a></li>
+                    <li><a href="https://github.com/Alims-Repo/FlowTab-CMP/releases" target="_blank">Releases</a></li>
+                    <li><a href="https://github.com/Alims-Repo/FlowTab-CMP/issues" target="_blank">Issues</a></li>
+                    <li><a href="https://github.com/Alims-Repo/FlowTab-CMP/discussions" target="_blank">Discussions</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="https://developer.android.com/jetpack/compose" target="_blank">Jetpack Compose</a></li>
+                    <li><a href="https://www.jetbrains.com/lp/compose-multiplatform/" target="_blank">Compose Multiplatform</a></li>
+                    <li><a href="https://github.com/chrisbanes/haze" target="_blank">Haze Library</a></li>
+                    <li><a href="https://m3.material.io/" target="_blank">Material Design 3</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul class="footer-links">
+                    <li><a href="mailto:sourav.0.alim@gmail.com">Email</a></li>
+                    <li><a href="https://github.com/Alims-Repo" target="_blank">GitHub Profile</a></li>
+                    <li><a href="https://github.com/Alims-Repo/FlowTab-CMP/issues/new" target="_blank">Report Bug</a></li>
+                    <li><a href="https://github.com/Alims-Repo/FlowTab-CMP/issues/new" target="_blank">Request Feature</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="https://github.com/Alims-Repo" target="_blank" title="GitHub">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-. 21 2.2.82. 64-.18 1.32-. 27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15. 46.55.38A8. 013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:sourav.0.alim@gmail.com" title="Email">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v. 217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-5.823 3.494-5.99-3.586L0 5.25v. 393l5.823 3.494 5.99-3.586L15 5.25v-. 393Z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div class="footer-bottom">
-            <p>Licensed under Apache License 2.0</p>
-            <p style="margin-top: 0.5rem;">Made by <a href="https://github.com/Alims-Repo" style="color: rgba(255,255,255,0.7); text-decoration: none;">Alim</a></p>
+            <p>© 2025 Alim. Licensed under <a href="https://github.com/Alims-Repo/FlowTab-CMP/blob/main/LICENSE" style="color: var(--primary); text-decoration: none;" target="_blank">Apache 2.0</a></p>
+            <p style="margin: 0;">Made with ❤️ for beautiful navigation</p>
         </div>
     </div>
 </footer>
 
 <script>
-    function showTab(tabId) {
-        document.querySelectorAll('.code-block').forEach(block => {
-            if (block.id) block.style.display = 'none';
-        });
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
 
-        document.querySelectorAll('.code-tab').forEach(btn => {
-            btn.classList.remove('active');
-        });
+    // Tab switching
+    function switchTab(event, index) {
+        event.preventDefault();
 
-        document.getElementById(tabId).style.display = 'block';
-        event.target.classList.add('active');
+        const blocks = document.querySelectorAll('. code-block');
+        const tabs = document.querySelectorAll('. code-tab');
+
+        blocks.forEach(block => block.classList.remove('active'));
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        document.getElementById(`code-${index}`).classList.add('active');
+        tabs[index].classList.add('active');
     }
 
+    // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const href = this.getAttribute('href');
+            if (href !== '#') {
+                e. preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
             }
         });
     });
+
+    // Button ripple effect enhancement
+    document.querySelectorAll('.btn'). forEach(button => {
+        button.addEventListener('mousedown', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect. left;
+            const y = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+        });
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeIn 0. 6s ease forwards';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards
+    document.querySelectorAll('.feature-card, .indicator-card, .integration, .practice-card, .step, .gif-player').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Add animation keyframes dynamically
+    const style = document. createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Track active nav link on scroll
+    window.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('. nav-links a');
+
+        let currentSection = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (window.scrollY >= sectionTop - 200) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href'). slice(1) === currentSection) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // Mobile menu toggle (for future enhancement)
+    const menuToggle = () => {
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks) {
+            navLinks.style.display = navLinks.style. display === 'flex' ? 'none' : 'flex';
+        }
+    };
+
+    // Performance optimization - lazy load images
+    if ('IntersectionObserver' in window) {
+        const imgObserver = new IntersectionObserver((entries, observer) => {
+            entries. forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[data-src]'). forEach(img => {
+            imgObserver.observe(img);
+        });
+    }
+
+    // Keyboard navigation support
+    document.addEventListener('keydown', (e) => {
+        // Escape key to close any modals (future use)
+        if (e.key === 'Escape') {
+            // Handle escape key
+        }
+
+        // Arrow keys for navigation (future use)
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+        }
+    });
+
+    // Prevent multiple rapid clicks
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            this.disabled = true;
+            setTimeout(() => {
+                this.disabled = false;
+            }, 300);
+        });
+    });
+
+    // Smooth scroll to top on logo click
+    document.querySelector('.logo').addEventListener('click', (e) => {
+        if (window.scrollY > 0) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    // Add focus styles for accessibility
+    document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('focus', function() {
+            this.style.outline = '2px solid var(--primary)';
+            this.style.outlineOffset = '2px';
+        });
+
+        el.addEventListener('blur', function() {
+            this. style.outline = 'none';
+        });
+    });
+
+    // Console message
+    console.log('%cFlowTab - Beautiful Bottom Navigation', 'color: #2563eb; font-size: 16px; font-weight: bold;');
+    console.log('%cVersion 0.5.1-beta | Apache 2.0 License', 'color: #6b7280; font-size: 12px;');
+    console.log('%cGitHub: https://github.com/Alims-Repo/FlowTab-CMP', 'color: #3b82f6;');
 </script>
 </body>
 </html>
