@@ -9,11 +9,24 @@
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-purple.svg?logo=kotlin)](http://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.9.3-brightgreen)](https://www.jetbrains.com/lp/compose-multiplatform/)
 
-[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Examples](#-integration-examples)
+[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Customization](#-customization) • [Examples](#-integration-examples)
 
 </div>
 
 ---
+
+## 🎬 Preview
+
+<div align="center">
+
+### In Action
+
+| Light Theme                                         | Dark Theme                                    |
+|-----------------------------------------------------|-----------------------------------------------|
+| <img src="media/flowtab-demo-light.gif" width="250"/> | <img src="media/flowtab-demo.gif" width="250"/> |
+
+
+*Smooth animations, expandable search, and glassmorphism effects*
 
 ## ✨ Features
 
@@ -22,6 +35,7 @@
 - 🔍 **Built-in Search Bar** - Expandable search with customizable callbacks
 - 🎭 **Blur Effects** - Optional glassmorphism with [Haze](https://github.com/chrisbanes/haze) integration
 - 🔔 **Badge Support** - Show notification counts or dot indicators
+- 🎨 **Customizable Indicators** - Choose from Ripple, Dot, or Line selection indicators
 - ⚡ **Lightweight** - Zero navigation dependencies, minimal overhead
 - 🎛️ **Highly Customizable** - Extensive styling options with preset configurations
 - 📱 **Production Ready** - Battle-tested, performant, and memory-efficient
@@ -283,6 +297,73 @@ fun AppWithVoyager() {
 
 ## 🎨 Customization
 
+### Selection Indicators
+
+Customize how selected items are indicated with three different styles:
+
+#### Ripple Indicator (Default)
+
+A full-width background highlight that fills behind the selected item:
+
+```kotlin
+BottomNavigation(
+    items = navItems,
+    selectedId = selectedId,
+    onItemSelected = { item -> selectedId = item.id },
+    config = NavConfig(
+        navIndicator = NavIndicator.Ripple(
+            color = MaterialTheme.colorScheme.primaryContainer,
+            indicatorPadding = 4.dp
+        )
+    )
+)
+```
+
+#### Dot Indicator
+
+A small circular indicator below the selected item:
+
+```kotlin
+BottomNavigation(
+    items = navItems,
+    selectedId = selectedId,
+    onItemSelected = { item -> selectedId = item.id },
+    config = NavConfig(
+        navIndicator = NavIndicator.Dot(
+            size = 8.dp,
+            color = MaterialTheme.colorScheme.primary,
+            indicatorPadding = 4.dp
+        )
+    )
+)
+```
+
+#### Line Indicator
+
+A horizontal line below the selected item:
+
+```kotlin
+BottomNavigation(
+    items = navItems,
+    selectedId = selectedId,
+    onItemSelected = { item -> selectedId = item.id },
+    config = NavConfig(
+        navIndicator = NavIndicator.Line(
+            height = 3.dp,
+            width = 40.dp,
+            color = MaterialTheme.colorScheme.primary,
+            indicatorPadding = 4.dp
+        )
+    )
+)
+```
+
+**Indicator Comparison:**
+
+- **Ripple**: Best for bold, high-contrast designs. Fills the entire item background.
+- **Dot**: Minimal and modern. Perfect for clean, Instagram-style navigation.
+- **Line**: Material Design 3 style. Subtle yet clear indication.
+
 ### Badges
 
 Add notification counts or dot indicators:
@@ -363,6 +444,10 @@ val instagramConfig = NavConfig(
         backgroundColor = Color.Black,
         selectedIconColor = Color.White,
         unSelectedIconColor = Color.Gray
+    ),
+    navIndicator = NavIndicator.Dot(
+        size = 6.dp,
+        color = Color.White
     )
 )
 ```
@@ -377,7 +462,10 @@ val pillConfig = NavConfig(
     enableBlur = true,
     blurIntensity = 0.95f,
     showBorder = true,
-    elevation = 8.dp
+    elevation = 8.dp,
+    navIndicator = NavIndicator.Ripple(
+        color = MaterialTheme.colorScheme.primaryContainer
+    )
 )
 ```
 
@@ -389,7 +477,12 @@ val floatingConfig = NavConfig(
     cornerRadius = 28.dp,
     showLabels = false,
     elevation = 12.dp,
-    maxWidth = 320.dp
+    maxWidth = 320.dp,
+    navIndicator = NavIndicator.Line(
+        height = 2.dp,
+        width = 40.dp,
+        color = MaterialTheme.colorScheme.primary
+    )
 )
 ```
 
@@ -467,6 +560,35 @@ sealed class NavItemType {
 }
 ```
 
+## 🎯 Indicator Types
+
+FlowTab offers three selection indicator styles:
+
+```kotlin
+sealed class NavIndicator {
+    // Full-width background highlight
+    data class Ripple(
+        val color: Color = Color.Red,
+        val indicatorPadding: Dp = 4.dp
+    ) : NavIndicator()
+    
+    // Small circular indicator
+    data class Dot(
+        val size: Dp = 8.dp,
+        val color: Color = Color.Red,
+        val indicatorPadding: Dp = 4.dp
+    ) : NavIndicator()
+    
+    // Horizontal line indicator
+    data class Line(
+        val height: Dp = 2.dp,
+        val width: Dp = 40.dp,
+        val color: Color = Color.Red,
+        val indicatorPadding: Dp = 4.dp
+    ) : NavIndicator()
+}
+```
+
 ---
 
 ## 📖 Configuration Reference
@@ -478,7 +600,7 @@ sealed class NavItemType {
 | `height` | Dp | 60.dp | Height of the navigation bar |
 | `cornerRadius` | Dp | 60.dp | Corner radius for rounded edges |
 | `maxWidth` | Dp | 460.dp | Maximum width (useful for tablets) |
-| `indicatorPadding` | Dp | 4.dp | Padding around selection indicator |
+| `iconsSize` | Dp | 20.dp | Size of navigation icons |
 | `animationDuration` | Int | 250 | Animation duration in milliseconds |
 | `enableBlur` | Boolean | true | Enable glassmorphism blur effect |
 | `blurIntensity` | Float | 0.95f | Blur intensity (0.0 to 1.0) |
@@ -487,6 +609,7 @@ sealed class NavItemType {
 | `showBorder` | Boolean | true | Show border around navigation bar |
 | `elevation` | Dp | 0.dp | Shadow elevation |
 | `navColor` | NavColor | NavColor() | Color configuration |
+| `navIndicator` | NavIndicator | NavIndicator.Dot() | Selection indicator style |
 
 ---
 
@@ -510,6 +633,11 @@ NavItem(id = "settings_screen", label = "Settings", icon = Icons.Default.Setting
 // ✅ Handle search callbacks appropriately
 onQueryChange = { query -> viewModel.updateSearchQuery(query) }
 onSearch = { query -> viewModel.performSearch(query) }
+
+// ✅ Match indicator style to your design language
+navIndicator = NavIndicator.Line()  // Material Design 3
+navIndicator = NavIndicator.Dot()   // Minimal/Instagram style
+navIndicator = NavIndicator.Ripple() // Bold/high contrast
 ```
 
 ### ❌ Don't
@@ -536,7 +664,7 @@ Example unit test:
 @Test
 fun `bottom navigation handles item selection correctly`() {
     var selectedId = "home"
-    
+
     composeTestRule.setContent {
         BottomNavigation(
             items = listOf(
@@ -547,7 +675,7 @@ fun `bottom navigation handles item selection correctly`() {
             onItemSelected = { item -> selectedId = item.id }
         )
     }
-    
+
     composeTestRule.onNodeWithText("Profile").performClick()
     assertEquals("profile", selectedId)
 }
