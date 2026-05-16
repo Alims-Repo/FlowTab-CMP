@@ -47,17 +47,15 @@ jobs:
           echo "✅ Versions match: $TAG_VERSION"
 
       - name: Publish to Maven Central
-        run: ./gradlew :flow-tab:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+        # SIGNING_KEY = base64-encoded armored private key (avoids multiline env-var issues)
+        run: |
+          export ORG_GRADLE_PROJECT_signingInMemoryKey=$(echo "$SIGNING_KEY_B64" | base64 -d)
+          ./gradlew :flow-tab:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
         env:
-          # Maven Central Portal credentials
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-
-          # GPG in-memory signing (no gpg binary required)
-          # SIGNING_PASSWORD is intentionally omitted — the key has no passphrase,
-          # and build.gradle.kts falls back to "" when this property is absent.
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey:   ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY_B64: ${{ secrets.SIGNING_KEY }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
