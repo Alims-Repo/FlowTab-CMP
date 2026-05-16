@@ -57,21 +57,3 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_KEY_B64: ${{ secrets.SIGNING_KEY }}
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: "v${{ steps.version.outputs.VERSION }}"
-          tag_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
-          generate_release_notes: true
-          body: |
-            ## 📦 Maven Central
-
-            ```kotlin
-            // build.gradle.kts
-            implementation("io.github.alims-repo:flowtab-cmp:${{ steps.version.outputs.VERSION }}")
-            ```
-
-            > It may take up to 30 minutes to appear on [Maven Central search](https://central.sonatype.com/artifact/io.github.alims-repo/flowtab-cmp).
