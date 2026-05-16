@@ -70,14 +70,6 @@ kotlin {
             }
         }
 
-//        getByName("androidDeviceTest") {
-//            dependencies {
-//                implementation(libs.androidx.runner)
-//                implementation(libs.androidx.core)
-//                implementation(libs.androidx.testExt.junit)
-//            }
-//        }
-
         iosMain {
             dependencies {
 
@@ -90,7 +82,7 @@ mavenPublishing {
     coordinates(
         groupId = "io.github.alims-repo",
         artifactId = "flowtab-cmp",
-        version = "0.5.6-beta"
+        version = "0.5.7-beta"
     )
 
     pom {
