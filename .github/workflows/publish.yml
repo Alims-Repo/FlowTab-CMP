@@ -1,0 +1,59 @@
+name: Publish to Maven Central
+
+# Triggers on any tag that starts with "v" — e.g. v0.5.7-beta, v1.0.0
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: macos-latest  # macOS is required to compile iOS KLIBs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21.0.7'
+          distribution: 'temurin'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Parse the version from the tag (strips leading "v")
+      # e.g. tag "v0.5.7-beta" → VERSION = "0.5.7-beta"
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      # Verify the tag version matches what's in build.gradle.kts (prevents accidental mismatch)
+      - name: Validate version matches build file
+        run: |
+          GRADLE_VERSION=$(sed -n 's/.*version = "\([^"]*\)".*/\1/p' flow-tab/build.gradle.kts | head -1)
+          TAG_VERSION="${{ steps.version.outputs.VERSION }}"
+          echo "Tag version:    $TAG_VERSION"
+          echo "Gradle version: $GRADLE_VERSION"
+          if [ "$TAG_VERSION" != "$GRADLE_VERSION" ]; then
+            echo "❌ Version mismatch! Tag=$TAG_VERSION but build.gradle.kts=$GRADLE_VERSION"
+            exit 1
+          fi
+          echo "✅ Versions match: $TAG_VERSION"
+
+      - name: Publish to Maven Central
+        # SIGNING_KEY = base64-encoded armored private key (avoids multiline env-var issues)
+        run: |
+          export ORG_GRADLE_PROJECT_signingInMemoryKey=$(echo "$SIGNING_KEY_B64" | base64 -d)
+          ./gradlew :flow-tab:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_KEY_B64: ${{ secrets.SIGNING_KEY }}

@@ -6,8 +6,8 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/flowtab-cmp?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/io.github.alims-repo/flowtab-cmp)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.2.21-purple.svg?logo=kotlin)](http://kotlinlang.org)
-[![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.9.3-brightgreen)](https://www.jetbrains.com/lp/compose-multiplatform/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-purple.svg?logo=kotlin)](http://kotlinlang.org)
+[![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.11.0-brightgreen)](https://www.jetbrains.com/lp/compose-multiplatform/)
 
 [Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Customization](#-customization) • [Examples](#-integration-examples)
 
@@ -53,10 +53,7 @@ Add to your `libs.versions.toml`:
 
 ```toml
 [versions]
-flowtab-cmp = "0.5.1-beta"
-
-[libraries]
-flowtab-cmp = { module = "io.github.alims-repo:flowtab-cmp", version.ref = "flowtab-cmp" }
+flowtab-cmp = "0.5.6-beta"
 ```
 
 Then in your module's `build.gradle.kts`:
@@ -71,7 +68,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'io.github.alims-repo:flowtab-cmp:0.5.1-beta'
+    implementation 'io.github.alims-repo:flowtab-cmp:0.5.6-beta'
 }
 ```
 
@@ -493,7 +490,7 @@ val floatingConfig = NavConfig(
 Create beautiful blur effects over scrollable content:
 
 ```kotlin
-val hazeState = remember { HazeState() }
+val hazeState = rememberHazeState()
 
 Scaffold(
     bottomBar = {
@@ -513,7 +510,7 @@ Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-            .hazeChild(state = hazeState)  // Apply to scrollable content
+            .hazeSource(state = hazeState)  // Mark content as blur source
     ) {
         items(100) { index ->
             Text("Item $index")
@@ -557,7 +554,7 @@ sealed class NavItemType {
     // Expandable search bar
     data object Search : NavItemType()
     
-    // Modal/dialog trigger (doesn't change selectedId)
+    // Separate circular action button (calls onItemSelected like any other item)
     data class Isolated(val rotation: Float = 0f) : NavItemType()
 }
 ```
@@ -569,23 +566,26 @@ FlowTab offers three selection indicator styles:
 ```kotlin
 sealed class NavIndicator {
     // Full-width background highlight
+    // color defaults to NavColor.selectedRippleColor when not specified
     data class Ripple(
-        val color: Color = Color.Red,
+        val color: Color = Color.Unspecified,
         val indicatorPadding: Dp = 4.dp
     ) : NavIndicator()
-    
-    // Small circular indicator
+
+    // Small circular indicator below the icon
+    // color defaults to NavColor.selectedIconColor when not specified
     data class Dot(
         val size: Dp = 8.dp,
-        val color: Color = Color.Red,
+        val color: Color = Color.Unspecified,
         val indicatorPadding: Dp = 4.dp
     ) : NavIndicator()
-    
-    // Horizontal line indicator
+
+    // Horizontal line below the icon (Material Design 3 style)
+    // color defaults to NavColor.selectedIconColor when not specified
     data class Line(
         val height: Dp = 2.dp,
         val width: Dp = 40.dp,
-        val color: Color = Color.Red,
+        val color: Color = Color.Unspecified,
         val indicatorPadding: Dp = 4.dp
     ) : NavIndicator()
 }
@@ -604,14 +604,15 @@ sealed class NavIndicator {
 | `maxWidth` | Dp | 460.dp | Maximum width (useful for tablets) |
 | `iconsSize` | Dp | 20.dp | Size of navigation icons |
 | `animationDuration` | Int | 250 | Animation duration in milliseconds |
-| `enableBlur` | Boolean | true | Enable glassmorphism blur effect |
-| `blurIntensity` | Float | 0.95f | Blur intensity (0.0 to 1.0) |
+| `enableBlur` | Boolean | true | Enable glassmorphism blur effect (requires `hazeState`) |
+| `blurIntensity` | Float | 0.95f | Background opacity on top of the blur (0f–1f) |
 | `showLabels` | Boolean | true | Show text labels below icons |
 | `hideLabelsOnSearchExpand` | Boolean | true | Hide labels when search expands |
 | `showBorder` | Boolean | true | Show border around navigation bar |
 | `elevation` | Dp | 0.dp | Shadow elevation |
 | `navColor` | NavColor | NavColor() | Color configuration |
-| `navIndicator` | NavIndicator | NavIndicator.Dot() | Selection indicator style |
+| `navIndicator` | NavIndicator | NavIndicator.Ripple() | Selection indicator style |
+| `searchPlaceholder` | String | "Search..." | Placeholder text in the search field |
 
 ---
 
@@ -704,7 +705,7 @@ Please read our [Contributing Guide](https://github.com/Alims-Repo/FlowTab-CMP/b
 This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/Alims-Repo/FlowTab-CMP/blob/main/LICENSE) file for details.
 
 ```
-Copyright 2025 Alim
+Copyright 2026 Alim
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
