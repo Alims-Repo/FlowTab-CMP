@@ -25,9 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.alimsrepo.flowtab.domain.model.NavColor
 import io.github.alimsrepo.flowtab.domain.model.NavConfig
 import io.github.alimsrepo.flowtab.domain.model.NavItem
@@ -58,6 +59,7 @@ internal fun NavItemView(
     showLabel: Boolean,
     onClick: () -> Unit
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
 
     Column(
         modifier = Modifier
@@ -66,7 +68,12 @@ internal fun NavItemView(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = onClick
+                onClick = {
+                    if (config.enableHaptics) {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
+                    onClick()
+                }
             ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -108,10 +115,10 @@ internal fun NavItemView(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = item.label,
-                    fontSize = 10.sp,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                    lineHeight = 10.sp,
-                    color = if (isSelected) config.navColor.selectedTextColor else config.navColor.unSelectedTextColor
+                    style = config.labelStyle.copy(
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                        color = if (isSelected) config.navColor.selectedTextColor else config.navColor.unSelectedTextColor
+                    )
                 )
             }
         }

@@ -1,8 +1,11 @@
 package io.github.alimsrepo.flowtab.domain.model
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 /**
  * Appearance and behaviour configuration for `BottomNavigation`.
@@ -28,6 +31,9 @@ import androidx.compose.ui.unit.dp
  * @property navColor Color scheme for the bar. See [NavColor].
  * @property navIndicator Selection indicator style. See [NavIndicator]. Default: [NavIndicator.Ripple].
  * @property searchPlaceholder Placeholder text inside the expanded search field. Default: `"Search..."`.
+ * @property labelStyle Base [TextStyle] for item labels. Font weight is overridden automatically
+ *   (Bold when selected, Normal when not). Default: `10.sp`.
+ * @property enableHaptics Perform haptic feedback on every item tap. Default: `true`.
  *
  * @see NavColor
  * @see NavIndicator
@@ -62,5 +68,7 @@ data class NavConfig(
     val elevation: Dp = 0.dp,
     val navColor: NavColor = NavColor(),
     val navIndicator: NavIndicator = NavIndicator.Ripple(),
-    val searchPlaceholder: String = "Search..."
+    val searchPlaceholder: String = "Search...",
+    val labelStyle: TextStyle = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Normal),
+    val enableHaptics: Boolean = true,
 )

@@ -50,3 +50,4 @@ data class NavColor(
     val unSelectedTextColor: Color = Color(0xFF9E9E9E),    // Grey 600
     val selectedRippleColor: Color = Color(0x331A73E8)     // 20% Blue Ripple
 )
+

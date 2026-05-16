@@ -155,10 +155,12 @@ internal fun StandardNavContainer(
                 is NavIndicator.Ripple -> if (ind.color == Color.Unspecified) config.navColor.selectedRippleColor else ind.color
                 is NavIndicator.Dot    -> if (ind.color == Color.Unspecified) config.navColor.selectedIconColor  else ind.color
                 is NavIndicator.Line   -> if (ind.color == Color.Unspecified) config.navColor.selectedIconColor  else ind.color
+                is NavIndicator.None   -> Color.Unspecified
             }
 
             if (indicatorWidth > 0.dp) {
-                when(config.navIndicator) {
+                when (config.navIndicator) {
+                    is NavIndicator.None -> { /* no indicator drawn */ }
                     is NavIndicator.Dot -> {
                         Box(
                             modifier = Modifier
