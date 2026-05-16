@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 /**
  * Visual style of the selection indicator shown on the active navigation item.
  *
- * Pass one of the three subtypes to [NavConfig.navIndicator]. All color properties default to
+ * Pass one of the subtypes to [NavConfig.navIndicator]. All color properties default to
  * [Color.Unspecified], which causes the renderer to fall back to the appropriate [NavColor]
  * value automatically — so the indicator works correctly out of the box without any color
  * argument.
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
  * | [Ripple] | [NavColor.selectedRippleColor] |
  * | [Dot]    | [NavColor.selectedIconColor]   |
  * | [Line]   | [NavColor.selectedIconColor]   |
+ * | [None]   | — (no indicator drawn)         |
  *
  * @property indicatorPadding Inset applied around the indicator shape.
  *
@@ -100,4 +101,15 @@ sealed class NavIndicator(open val indicatorPadding: Dp) {
         val color: Color = Color.Unspecified,
         override val indicatorPadding: Dp = 4.dp,
     ) : NavIndicator(indicatorPadding)
+
+    /**
+     * No indicator is drawn. The active item is distinguished only by its icon tint,
+     * label colour, and icon swap. Ideal for minimal or icon-only designs.
+     *
+     * Example:
+     * ```kotlin
+     * NavConfig(navIndicator = NavIndicator.None)
+     * ```
+     */
+    data object None : NavIndicator(0.dp)
 }
