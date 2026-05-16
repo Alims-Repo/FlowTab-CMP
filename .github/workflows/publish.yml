@@ -1,0 +1,78 @@
+name: Publish to Maven Central
+
+# Triggers on any tag that starts with "v" — e.g. v0.5.7-beta, v1.0.0
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: macos-latest  # macOS is required to compile iOS KLIBs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Parse the version from the tag (strips leading "v")
+      # e.g. tag "v0.5.7-beta" → VERSION = "0.5.7-beta"
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      # Verify the tag version matches what's in build.gradle.kts (prevents accidental mismatch)
+      - name: Validate version matches build file
+        run: |
+          GRADLE_VERSION=$(grep -oP 'version = "\K[^"]+' flow-tab/build.gradle.kts | head -1)
+          TAG_VERSION="${{ steps.version.outputs.VERSION }}"
+          echo "Tag version:    $TAG_VERSION"
+          echo "Gradle version: $GRADLE_VERSION"
+          if [ "$TAG_VERSION" != "$GRADLE_VERSION" ]; then
+            echo "❌ Version mismatch! Tag=$TAG_VERSION but build.gradle.kts=$GRADLE_VERSION"
+            exit 1
+          fi
+          echo "✅ Versions match: $TAG_VERSION"
+
+      - name: Publish to Maven Central
+        run: ./gradlew :flow-tab:publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+        env:
+          # Maven Central Portal credentials
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+
+          # GPG in-memory signing (no gpg binary required)
+          # SIGNING_PASSWORD is intentionally omitted — the key has no passphrase,
+          # and build.gradle.kts falls back to "" when this property is absent.
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey:   ${{ secrets.SIGNING_KEY }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "v${{ steps.version.outputs.VERSION }}"
+          tag_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
+          generate_release_notes: true
+          body: |
+            ## 📦 Maven Central
+
+            ```kotlin
+            // build.gradle.kts
+            implementation("io.github.alims-repo:flowtab-cmp:${{ steps.version.outputs.VERSION }}")
+            ```
+
+            > It may take up to 30 minutes to appear on [Maven Central search](https://central.sonatype.com/artifact/io.github.alims-repo/flowtab-cmp).

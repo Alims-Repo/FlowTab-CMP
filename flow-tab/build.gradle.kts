@@ -1,14 +1,14 @@
 import com.vanniktech.maven.publish.SonatypeHost
-import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+import com.vanniktech.maven.publish.KotlinMultiplatform
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-//    alias(libs.plugins.androidLint)
 
-    id("com.vanniktech.maven.publish") version "0.28.0"
+    id("com.vanniktech.maven.publish") version "0.30.0"
+    id("signing")
 }
 
 android {
@@ -34,21 +34,6 @@ android {
 }
 
 kotlin {
-//    androidLibrary {
-//        namespace = "io.github.alimsrepo.flowtab"
-//        compileSdk = 36
-//        minSdk = 24
-//
-//        withHostTestBuilder {
-//        }
-//
-//        withDeviceTestBuilder {
-//            sourceSetTreeName = "test"
-//        }.configure {
-//            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//        }
-//    }
-
     androidTarget {
         publishLibraryVariants("release")
     }
@@ -79,6 +64,8 @@ kotlin {
 }
 
 mavenPublishing {
+    configure(KotlinMultiplatform(sourcesJar = true))
+
     coordinates(
         groupId = "io.github.alims-repo",
         artifactId = "flowtab-cmp",
@@ -114,6 +101,19 @@ mavenPublishing {
     }
 
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+}
 
-    signAllPublications()
+// Read signing credentials from ~/.gradle/gradle.properties
+// Keys: signingInMemoryKeyId, signingInMemoryKey, signingInMemoryKeyPassword
+val signingKeyId = findProperty("signingInMemoryKeyId") as String?
+val signingKey = findProperty("signingInMemoryKey") as String?
+val signingPassword = findProperty("signingInMemoryKeyPassword") as String? ?: ""
+
+signing {
+    if (signingKey != null) {
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        sign(publishing.publications)
+    } else {
+        logger.warn("⚠️  signingInMemoryKey not set — publications will NOT be signed.")
+    }
 }

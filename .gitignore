@@ -17,3 +17,8 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# GPG signing keys — never commit these
+*.asc
+flowtab_signing_key.asc
+
