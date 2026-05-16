@@ -1159,14 +1159,14 @@
 <!-- Hero -->
 <section class="hero">
     <div class="container">
-        <span class="version-badge">v0.5.2-beta • Open Source</span>
+        <span class="version-badge">v0.5.6-beta • Open Source</span>
         <h1 class="mt-4">Beautiful Bottom Navigation<br>for Compose Multiplatform</h1>
         <p>Framework-agnostic, production-ready, with smooth animations and zero navigation dependencies.</p>
 
         <div class="badges mt-8">
             <img src="https://img.shields.io/maven-central/v/io.github.alims-repo/flowtab-cmp?color=2563eb&style=flat-square" alt="Maven Central" class="badge-img">
             <img src="https://img.shields.io/badge/License-Apache%202.0-2563eb?style=flat-square" alt="License" class="badge-img">
-            <img src="https://img.shields.io/badge/Kotlin-2.2.21-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin" class="badge-img">
+            <img src="https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin" class="badge-img">
             <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-success?style=flat-square" alt="Platform" class="badge-img">
         </div>
 
@@ -1341,7 +1341,7 @@
             <div class="code-block active" id="code-0">
                     <pre># In your libs.versions.toml (Recommended)
 [versions]
-flowtab-cmp = "0.5.1-beta"
+flowtab-cmp = "0.5.6-beta"
 
 [libraries]
 flowtab-cmp = { module = "io.github.alims-repo:flowtab-cmp", version.ref = "flowtab-cmp" }</pre>
@@ -1357,7 +1357,7 @@ dependencies {
             <div class="code-block" id="code-2">
                     <pre>// build.gradle (Groovy DSL)
 dependencies {
-    implementation 'io.github.alims-repo:flowtab-cmp:0.5.1-beta'
+    implementation 'io.github.alims-repo:flowtab-cmp:0.5.6-beta'
 }</pre>
             </div>
         </div>
@@ -1494,6 +1494,12 @@ dependencies {
                     <td>Maximum width (for tablets)</td>
                 </tr>
                 <tr>
+                    <td><code>iconsSize</code></td>
+                    <td>Dp</td>
+                    <td>20.dp</td>
+                    <td>Size of navigation icons</td>
+                </tr>
+                <tr>
                     <td><code>animationDuration</code></td>
                     <td>Int</td>
                     <td>250</td>
@@ -1503,13 +1509,55 @@ dependencies {
                     <td><code>enableBlur</code></td>
                     <td>Boolean</td>
                     <td>true</td>
-                    <td>Enable blur effects</td>
+                    <td>Enable blur effects (requires <code>hazeState</code>)</td>
+                </tr>
+                <tr>
+                    <td><code>blurIntensity</code></td>
+                    <td>Float</td>
+                    <td>0.95f</td>
+                    <td>Background opacity on top of blur (0f–1f)</td>
                 </tr>
                 <tr>
                     <td><code>showLabels</code></td>
                     <td>Boolean</td>
                     <td>true</td>
-                    <td>Show text labels</td>
+                    <td>Show text labels below icons</td>
+                </tr>
+                <tr>
+                    <td><code>hideLabelsOnSearchExpand</code></td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>Hide labels while search is expanded</td>
+                </tr>
+                <tr>
+                    <td><code>showBorder</code></td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>Show 1dp border around the bar</td>
+                </tr>
+                <tr>
+                    <td><code>elevation</code></td>
+                    <td>Dp</td>
+                    <td>0.dp</td>
+                    <td>Drop shadow elevation</td>
+                </tr>
+                <tr>
+                    <td><code>navColor</code></td>
+                    <td>NavColor</td>
+                    <td>NavColor()</td>
+                    <td>Color scheme configuration</td>
+                </tr>
+                <tr>
+                    <td><code>navIndicator</code></td>
+                    <td>NavIndicator</td>
+                    <td>NavIndicator.Ripple()</td>
+                    <td>Selection indicator style</td>
+                </tr>
+                <tr>
+                    <td><code>searchPlaceholder</code></td>
+                    <td>String</td>
+                    <td>"Search..."</td>
+                    <td>Placeholder text inside the search field</td>
                 </tr>
                 </tbody>
             </table>
@@ -1618,7 +1666,7 @@ dependencies {
         </div>
 
         <div class="footer-bottom">
-            <p>© 2025 Alim. Licensed under <a href="https://github.com/Alims-Repo/FlowTab-CMP/blob/main/LICENSE" style="color: var(--primary); text-decoration: none;" target="_blank">Apache 2.0</a></p>
+            <p>© 2026 Alim. Licensed under <a href="https://github.com/Alims-Repo/FlowTab-CMP/blob/main/LICENSE" style="color: var(--primary); text-decoration: none;" target="_blank">Apache 2.0</a></p>
             <p style="margin: 0;">Made with ❤️ for beautiful navigation</p>
         </div>
     </div>
@@ -1832,7 +1880,7 @@ dependencies {
 
     // Console message
     console.log('%cFlowTab - Beautiful Bottom Navigation', 'color: #2563eb; font-size: 16px; font-weight: bold;');
-    console.log('%cVersion 0.5.1-beta | Apache 2.0 License', 'color: #6b7280; font-size: 12px;');
+    console.log('%cVersion 0.5.6-beta | Apache 2.0 License', 'color: #6b7280; font-size: 12px;');
     console.log('%cGitHub: https://github.com/Alims-Repo/FlowTab-CMP', 'color: #3b82f6;');
 </script>
 </body>
