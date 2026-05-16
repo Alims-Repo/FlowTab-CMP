@@ -36,7 +36,7 @@ jobs:
       # Verify the tag version matches what's in build.gradle.kts (prevents accidental mismatch)
       - name: Validate version matches build file
         run: |
-          GRADLE_VERSION=$(grep -oP 'version = "\K[^"]+' flow-tab/build.gradle.kts | head -1)
+          GRADLE_VERSION=$(sed -n 's/.*version = "\([^"]*\)".*/\1/p' flow-tab/build.gradle.kts | head -1)
           TAG_VERSION="${{ steps.version.outputs.VERSION }}"
           echo "Tag version:    $TAG_VERSION"
           echo "Gradle version: $GRADLE_VERSION"
