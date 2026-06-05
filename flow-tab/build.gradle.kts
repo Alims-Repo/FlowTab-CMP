@@ -52,6 +52,7 @@ kotlin {
                 implementation(libs.ui)
 
                 implementation(libs.haze)
+                implementation(libs.haze.blur)
             }
         }
 
@@ -69,7 +70,7 @@ mavenPublishing {
     coordinates(
         groupId = "io.github.alims-repo",
         artifactId = "flowtab-cmp",
-        version = "0.5.8-beta"
+        version = "0.5.9-beta"
     )
 
     pom {
