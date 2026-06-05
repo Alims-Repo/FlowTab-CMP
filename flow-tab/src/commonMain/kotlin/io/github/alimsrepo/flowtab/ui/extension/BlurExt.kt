@@ -2,8 +2,9 @@ package io.github.alimsrepo.flowtab.ui.extension
 
 import androidx.compose.ui.Modifier
 import io.github.alimsrepo.flowtab.domain.model.NavConfig
-import dev.chrisbanes.haze.HazeProgressive
+import dev.chrisbanes.haze.blur.HazeProgressive
 import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.blur.blurEffect
 import dev.chrisbanes.haze.hazeEffect
 
 /**
@@ -22,11 +23,13 @@ import dev.chrisbanes.haze.hazeEffect
 fun Modifier.backgroundBlur(config: NavConfig, hazeState: HazeState?) : Modifier {
     return if (config.enableBlur && hazeState != null) {
         hazeEffect(state = hazeState) {
-            progressive = HazeProgressive.verticalGradient(
-                startIntensity = config.blurIntensity,
-                endIntensity = config.blurIntensity,
-                preferPerformance = true
-            )
+            blurEffect {
+                progressive = HazeProgressive.verticalGradient(
+                    startIntensity = config.blurIntensity,
+                    endIntensity = config.blurIntensity,
+                    preferPerformance = true
+                )
+            }
         }
     } else this
 }
